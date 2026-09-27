@@ -86,26 +86,27 @@ void delrecord(){
     system("cls");
     cout<<"Enter Question ID to Delete :\n";
     cin>>id;
-    fstream fq;
-    fq.open("Questions.dat", ios::in | ios::out);
+    fstream fq, temp;
+    fq.open("Questions.dat", ios::in );
+    temp.open("temp.dat", ios::out);
     while (fq.read((char*)this, sizeof(question)))
     {
         if (questionid == id)
         {
             cout << "Question Found!" << endl;
             output();
-            cout << "Deleting the question" << endl;
-    
+            cout << "Question deleted successfully!" << endl;
         }
-        fq.write((char*)this, sizeof(question));
+        else
+        {
+        temp.write((char*)this, sizeof(question));
+     }
     }
         fq.close();
+        temp.close();
         remove("Questions.dat");
-        if (questionid != id)
-        cout << "Question ID not found." << endl;
-    else
-        cout << "Record deleted successfully." << endl;
-
+        rename("temp.dat", "Questions.dat");
+        
 }
 
 void replacedata(){
