@@ -214,6 +214,6 @@ void mainmenu(){
 int main(){
     Menu m;
     m.mainmenu();
-    cout<<"hello";
+    cout<<"hello from Divayansha";
     return 0;
 }
