@@ -46,7 +46,7 @@ void input(){
 }
 
 void output(){
-    cout<<"QuestionID :"<<questionid<<"\n"<<"Question :"<<"\n"<<question<<endl;
+    cout<<"QuestionID :"<<questionid<<"\n"<<"Question :"<<question<<endl;
 }
 
 void questionsadd(){
@@ -76,13 +76,37 @@ void displayallquestions(){
     while (fq.read((char*)this, sizeof(question)))
     {
         output();
+        cout<<endl;
     }
     fq.close();
 }
 
 void delrecord(){
+    int id;
     system("cls");
     cout<<"Enter Question ID to Delete :\n";
+    cin>>id;
+    fstream fq, temp;
+    fq.open("Questions.dat", ios::in );
+    temp.open("temp.dat", ios::out);
+    while (fq.read((char*)this, sizeof(question)))
+    {
+        if (questionid == id)
+        {
+            cout << "Question Found!" << endl;
+            output();
+            cout << "Question deleted successfully!" << endl;
+        }
+        else
+        {
+        temp.write((char*)this, sizeof(question));
+     }
+    }
+        fq.close();
+        temp.close();
+        remove("Questions.dat");
+        rename("temp.dat", "Questions.dat");
+        
 }
 
 void replacedata(){
