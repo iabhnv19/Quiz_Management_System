@@ -40,9 +40,8 @@ char subject[20];
 char question[100];
 
 public:
-
 void subjectlist(){
-    fstream fq;
+    /*fstream fq;
     system("cls");
     cout << "Subjects :\n";
     fq.open("Questions.dat", ios::in);
@@ -51,7 +50,10 @@ void subjectlist(){
         cout << subject << endl;
     }
     cout<<"Enter a New Subject : ";
-    cin.getline(subject,20);
+    cin.getline(subject,20);*/
+    system("cls");
+    cout<<"SUbject List will be displayed here"<<endl;
+    system("pause");
 }
 
 void input(){
@@ -62,7 +64,7 @@ void input(){
     cin.getline(question,100);
 }
 
-void outputquestion(){
+void output(){
     cout<<"QuestionID :"<<questionid<<"\n"<<"Question :"<<"\n"<<question<<endl;
 }
 
@@ -74,10 +76,9 @@ void questionsadd(){
         input();
         fq.open("Questions.dat", ios::out | ios::app);
         fq.write((char*)this, sizeof(question));
-        fq.write((char*)this, sizeof(subject));
         fq.close();
         cout << "\nYou Added the Following Question:\n";
-        outputquestion();
+        output();   
         cout << "\nDo you want to add a new question?\n";
         cout << "1. Yes\n";
         cout << "2. No\n";
@@ -93,7 +94,8 @@ void displayallquestions(){
     fq.open("Questions.dat", ios::in);
     while (fq.read((char*)this, sizeof(question)))
     {
-        outputquestion();
+        output();
+        cout<<endl;
     }
     fq.close();
 }
