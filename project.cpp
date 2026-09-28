@@ -238,5 +238,6 @@ void mainmenu(){
 int main(){
     Menu m;
     m.mainmenu();
+    cout<<"Hello from Eshmeet";
     return 0;
 }
