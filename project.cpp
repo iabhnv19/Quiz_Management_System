@@ -38,6 +38,11 @@ private:
 int questionid;
 char subject[20];
 char question[100];
+char optionA[50];
+char optionB[50];
+char optionC[50];
+char optionD[50];
+int correctoption;
 
 public:
 void subjectlist(){
@@ -52,7 +57,7 @@ void subjectlist(){
     cout<<"Enter a New Subject : ";
     cin.getline(subject,20);*/
     system("cls");
-    cout<<"SUbject List will be displayed here"<<endl;
+    cout<<"SUbject List will be displayed here\n"<<endl;
     system("pause");
 }
 
@@ -60,12 +65,29 @@ void input(){
     cout<<"Enter The Question ID : "<<" ";
     cin>>questionid;
     cin.ignore();
-    cout<<"Enter the Question :"<<" ";
+    cout<<"Enter the Question : "<<" ";
     cin.getline(question,100);
+    cout<<"\nEnter the Options\n";
+    cout<<"Option A : ";
+    cin.getline(optionA,50);
+    cout<<"Option B : ";
+    cin.getline(optionB,50);
+    cout<<"Option C : ";
+    cin.getline(optionC,50);
+    cout<<"Option D : ";
+    cin.getline(optionD,50);
+    cout<<"\nEnter the Correct Option (1 to 4): ";
+    cin>>correctoption;
 }
 
 void output(){
     cout<<"QuestionID :"<<questionid<<"\n"<<"Question :"<<"\n"<<question<<endl;
+    cout<<"Options :\n";
+    cout<<"A. "<<optionA<<endl;
+    cout<<"B. "<<optionB<<endl;
+    cout<<"C. "<<optionC<<endl;
+    cout<<"D. "<<optionD<<endl;
+    cout<<"Correct Option : "<<correctoption<<endl;
 }
 
 void questionsadd(){
@@ -75,7 +97,7 @@ void questionsadd(){
         system("cls");
         input();
         fq.open("Questions.dat", ios::out | ios::app);
-        fq.write((char*)this, sizeof(question));
+        fq.write((char*)this, sizeof(*this));
         fq.close();
         cout << "\nYou Added the Following Question:\n";
         output();   
@@ -101,13 +123,92 @@ void displayallquestions(){
 }
 
 void delrecord(){
+    int id;
     system("cls");
     cout<<"Enter Question ID to Delete :\n";
+    cin>>id;
+    fstream fq, temp;
+    fq.open("Questions.dat", ios::in );
+    temp.open("temp.dat", ios::out);
+    while (fq.read((char*)this, sizeof(question)))
+    {
+        if (questionid == id)
+        {
+            cout << "\nQuestion Found!\n" << endl;
+            output();
+            cout << "Question deleted successfully!" << endl;
+        }
+        else
+        {
+        temp.write((char*)this, sizeof(question));
+     }
+    }
+        fq.close();
+        temp.close();
+        remove("Questions.dat");
+        rename("temp.dat", "Questions.dat");    
+}
+
+void find(){
+    fstream fq;
+    int id;
+    int choice;
+    char findquestion[100];
+    system("cls");
+    cout<<"Find by Id Or Question :\n";
+    cout<<"1. Find by ID\n";
+    cout<<"2. Find by Question\n";
+    cout<<"\nEnter your choice : ";
+    cin>>choice;
+    switch(choice){
+        case 1:
+            cout<<"\nEnter Question ID to Find :\n";
+            cin>>id;
+            fq.open("Questions.dat", ios::in);
+            while (fq.read((char*)this, sizeof(question)))
+            {
+                if (questionid == id)
+                {
+                    cout << "\nQuestion Found!\n" << endl;
+                    output();
+                }
+            }
+            fq.close();
+            break;
+        case 2:
+            cin.ignore();
+            cout<<"\nEnter Question to Find :\n";
+            cin.getline(findquestion, 100);
+            fq.open("Questions.dat", ios::in);
+            while (fq.read((char*)this, sizeof(question))){
+                bool found = false;
+                for (int i = 0; question[i] != '\0'; i++){
+                    int j = 0;
+                    while (findquestion[j] != '\0' && question[i + j] == findquestion[j])
+                    {
+                        j++;
+                    }
+                    if (findquestion[j] == '\0')
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found)
+                {
+                    cout << "\nQuestion Found!\n" << endl;
+                    output();
+                }
+            }
+            fq.close();
+            break;
+    }
 }
 
 void replacedata(){
     system("cls");
-    cout<<"Enter Question ID to Replace :\n";
+    find();
 }
 };
 
@@ -195,4 +296,3 @@ int main(){
     m.mainmenu();
     return 0;
 }
-
