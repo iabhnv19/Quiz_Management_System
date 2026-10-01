@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string.h>
 using namespace std;
 
 class studentinfo{
@@ -23,6 +24,7 @@ char name[20];
 
 public:
 void input(){
+    system("cls");
     cout<<"Enter The Faculty ID : ";
     cin>>facultyid;
     cin.ignore();
@@ -34,19 +36,58 @@ void input(){
 class question{
 private:
 int questionid;
+char subject[20];
 char question[100];
+char optionA[50];
+char optionB[50];
+char optionC[50];
+char optionD[50];
+int correctoption;
 
 public:
+void subjectlist(){
+    /*fstream fq;
+    system("cls");
+    cout << "Subjects :\n";
+    fq.open("Questions.dat", ios::in);
+    while (fq.read((char*)this, sizeof(subject)))
+    {
+        cout << subject << endl;
+    }
+    cout<<"Enter a New Subject : ";
+    cin.getline(subject,20);*/
+    system("cls");
+    cout<<"SUbject List will be displayed here\n"<<endl;
+    system("pause");
+}
+
 void input(){
     cout<<"Enter The Question ID : "<<" ";
     cin>>questionid;
     cin.ignore();
-    cout<<"Enter the Question :"<<" ";
+    cout<<"Enter the Question : "<<" ";
     cin.getline(question,100);
+    cout<<"\nEnter the Options\n";
+    cout<<"Option A : ";
+    cin.getline(optionA,50);
+    cout<<"Option B : ";
+    cin.getline(optionB,50);
+    cout<<"Option C : ";
+    cin.getline(optionC,50);
+    cout<<"Option D : ";
+    cin.getline(optionD,50);
+    cout<<"\nEnter the Correct Option (1 to 4): ";
+    cin>>correctoption;
 }
 
 void output(){
-    cout<<"QuestionID :"<<questionid<<"\n"<<"Question :"<<question<<endl;
+    cout<<"QuestionID :"<<questionid<<"\n"<<"Question :"<<"\n"<<question<<endl;
+    cout<<"Options :\n";
+    cout<<"A. "<<optionA<<endl;
+    cout<<"B. "<<optionB<<endl;
+    cout<<"C. "<<optionC<<endl;
+    cout<<"D. "<<optionD<<endl;
+    cout<<"Correct Option : "<<correctoption<<endl;
 }
 
 void questionsadd(){
@@ -56,10 +97,10 @@ void questionsadd(){
         system("cls");
         input();
         fq.open("Questions.dat", ios::out | ios::app);
-        fq.write((char*)this, sizeof(question));
+        fq.write((char*)this, sizeof(*this));
         fq.close();
         cout << "\nYou Added the Following Question:\n";
-        output();
+        output();   
         cout << "\nDo you want to add a new question?\n";
         cout << "1. Yes\n";
         cout << "2. No\n";
@@ -93,7 +134,7 @@ void delrecord(){
     {
         if (questionid == id)
         {
-            cout << "Question Found!" << endl;
+            cout << "\nQuestion Found!\n" << endl;
             output();
             cout << "Question deleted successfully!" << endl;
         }
@@ -105,13 +146,69 @@ void delrecord(){
         fq.close();
         temp.close();
         remove("Questions.dat");
-        rename("temp.dat", "Questions.dat");
-        
+        rename("temp.dat", "Questions.dat");    
+}
+
+void find(){
+    fstream fq;
+    int id;
+    int choice;
+    char findquestion[100];
+    system("cls");
+    cout<<"Find by Id Or Question :\n";
+    cout<<"1. Find by ID\n";
+    cout<<"2. Find by Question\n";
+    cout<<"\nEnter your choice : ";
+    cin>>choice;
+    switch(choice){
+        case 1:
+            cout<<"\nEnter Question ID to Find :\n";
+            cin>>id;
+            fq.open("Questions.dat", ios::in);
+            while (fq.read((char*)this, sizeof(question)))
+            {
+                if (questionid == id)
+                {
+                    cout << "\nQuestion Found!\n" << endl;
+                    output();
+                }
+            }
+            fq.close();
+            break;
+        case 2:
+            cin.ignore();
+            cout<<"\nEnter Question to Find :\n";
+            cin.getline(findquestion, 100);
+            fq.open("Questions.dat", ios::in);
+            while (fq.read((char*)this, sizeof(question))){
+                bool found = false;
+                for (int i = 0; question[i] != '\0'; i++){
+                    int j = 0;
+                    while (findquestion[j] != '\0' && question[i + j] == findquestion[j])
+                    {
+                        j++;
+                    }
+                    if (findquestion[j] == '\0')
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found)
+                {
+                    cout << "\nQuestion Found!\n" << endl;
+                    output();
+                }
+            }
+            fq.close();
+            break;
+    }
 }
 
 void replacedata(){
     system("cls");
-    cout<<"Enter Question ID to Replace :\n";
+    find();
 }
 };
 
@@ -123,6 +220,7 @@ void facultylogin(){
     faculty f;
     int choice;
     f.input();
+    subjectlist();
     do {
         system("cls");
         displayfaculty();
@@ -151,48 +249,6 @@ void facultylogin(){
 
     } while(choice != 5);
 }
-
-/*void questionsadd(){
-    question q;
-    fstream fq;
-    int choice;
-    do {
-        system("cls");
-        q.input();
-        fq.open("Questions.dat", ios::out | ios::app);
-        fq.write((char*)&q, sizeof(q));
-        fq.close();
-        cout << "\nYou Added the Following Question:\n";
-        q.output();
-        cout << "\nDo you want to add a new question?\n";
-        cout << "1. Yes\n";
-        cout << "2. No\n";
-        cout << "Enter your choice: ";
-        cin >> choice;
-    } while(choice == 1);
-}
-
-void displayallquestions(){
-    faculty f;
-    question q;
-    fstream fq;
-    fq.open("Questions.dat", ios::in);
-    while (fq.read((char*)&q, sizeof(q)))
-    {
-        q.output();
-    }
-    fq.close();
-}
-
-void delrecord(){
-    system("cls");
-    cout<<"\nEnter Question ID to Delete :\n";
-}
-
-void replacedata(){
-    system("cls");
-     cout<<"\nEnter Question ID to Replace :\n";
-}*/
 
 void studentlogin(){
     studentinfo s;
