@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string.h>
 #include <fstream>
+#include <string.h>
 using namespace std;
 
 class studentinfo{
