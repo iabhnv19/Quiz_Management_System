@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string.h>
 using namespace std;
 
 class studentinfo{
@@ -16,6 +17,9 @@ void input(){
     cout<<"Enter the Name : ";
     cin.getline(name,20);
 }
+
+int getid(){ return rollnumber; }
+char* getname(){ return name; }
 
 void output(){
     cout<<"Student ID/Roll Number : "<<rollnumber<<"\n"<<"Name : "<<name<<endl;
@@ -39,10 +43,10 @@ void input(){
 };
 
 class question{
-private:
+protected:
 int questionid;
 char subject[20];
-char question[100];
+char ques[100];
 char optionA[50];
 char optionB[50];
 char optionC[50];
@@ -120,29 +124,52 @@ void subjectlist()
     } while (true);
 }
 
-void input(){
+void input()
+{
     cout << "Subject : " << subject << endl;
-    cout<<"Enter The Question ID : "<<" ";
-    cin>>questionid;
+    questionid = autoqueiD();
+    cout << "Question ID : " << questionid << endl;
+    cout << "Enter the Question : ";
     cin.ignore();
-    cout<<"Enter the Question : "<<" ";
-    cin.getline(question,100);
-    cout<<"\nEnter the Options\n";
-    cout<<"Option A : ";
-    cin.getline(optionA,50);
-    cout<<"Option B : ";
-    cin.getline(optionB,50);
-    cout<<"Option C : ";
-    cin.getline(optionC,50);
-    cout<<"Option D : ";
-    cin.getline(optionD,50);
-    cout<<"\nEnter the Correct Option (1 to 4): ";
-    cin>>correctoption;
+    cin.getline(ques, 100);
+    cout << "\nEnter the Options\n";
+    cout << "Option A : ";
+    cin.getline(optionA, 50);
+    cout << "Option B : ";
+    cin.getline(optionB, 50);
+    cout << "Option C : ";
+    cin.getline(optionC, 50);
+    cout << "Option D : ";
+    cin.getline(optionD, 50);
+    cout << "\nEnter the Correct Option (1 to 4): ";
+    cin >> correctoption;
 }
+
+int autoqueiD()
+{
+    fstream fq;
+    question q;
+    int lastID = 0;
+    fq.open("Questions.dat", ios::in);
+    if (fq)
+    {
+        while (fq.read((char*)&q, sizeof(q))){
+            if (strcmp(q.subject, subject) == 0){
+                if (q.questionid > lastID)
+                {
+                    lastID = q.questionid;
+                }
+            }
+        }
+        fq.close();
+    }
+    return lastID + 1;
+}
+
 
 void output(){
     cout << "Subject : " << subject << endl;
-    cout<<"QuestionID :"<<questionid<<"\n"<<"Question :"<<"\n"<<question<<endl;
+    cout<<"QuestionID :"<<questionid<<"\n"<<"Question :"<<"\n"<<ques<<endl;
     cout<<"Options :\n";
     cout<<"A. "<<optionA<<endl;
     cout<<"B. "<<optionB<<endl;
@@ -243,9 +270,9 @@ void find(){
             fq.open("Questions.dat", ios::in);
             while (fq.read((char*)this, sizeof(*this))){
                 bool found = false;
-                for (int i = 0; question[i] != '\0'; i++){
+                for (int i = 0; ques[i] != '\0'; i++){
                     int j = 0;
-                    while (findquestion[j] != '\0' && question[i + j] == findquestion[j])
+                    while (findquestion[j] != '\0' && ques[i + j] == findquestion[j])
                     {
                         j++;
                     }
@@ -276,18 +303,113 @@ void replacedata(){
 class exam:public question{
 
 public:
-void selectsub(){
-    subjectlist();
-} 
+bool selectsub(){
+    fstream fq;
+    char subjects[50][20];
+    int count = 0;
+    int choice;
+
+    fq.open("Questions.dat", ios::in);
+    if(fq){
+        while(fq.read((char*)this, sizeof(question))){
+            bool exists = false;
+            for(int i = 0; i < count; i++){
+                if(strcmp(subjects[i], subject) == 0){
+                    exists = true;
+                    break;
+                }
+            }
+            if(!exists && count < 50){
+                strcpy(subjects[count], subject);
+                count++;
+            }
+        }
+        fq.close();
+    }
+
+    if(count == 0){
+        cout << "No subjects available yet.\n";
+        return false;
+    }
+
+    do{
+        system("cls");
+        cout << "SELECT SUBJECT\n";
+        for(int i = 0; i < count; i++){
+            cout << i + 1 << ". " << subjects[i] << endl;
+        }
+        cout << "0. Back\n";
+        cout << "\nEnter your choice : ";
+        cin >> choice;
+        if(choice < 0 || choice > count){
+            cout << "Invalid choice!\n";
+            system("pause");
+        }
+    }while(choice < 0 || choice > count);
+
+    if(choice == 0){
+        return false;
+    }
+    strcpy(subject, subjects[choice - 1]);
+    cout << "\nSelected Subject : " << subject << endl;
+    system("pause");
+    return true;
+}
 
 void rules(){
     system("cls");
-    cout<<"Rules of Exam :\n";
-    cout<<"1. Each Question carries 1 mark.\n";
-    cout<<"2. No Negative Marking.\n";
+    cout << "Rules of Exam :\n";
+    cout << "1. Each Question carries 1 mark.\n";
+    cout << "2. No Negative Marking.\n";
+    cout << "3. Answer with a number from 1 to 4.\n";
     system("pause");
 }
 
+bool takeexam(int &score, int &total){
+    fstream fq;
+    char chosen[20];
+    int n = 0;
+    int ans;
+    score = 0;
+    total = 0;
+    strcpy(chosen, subject);   
+
+    fq.open("Questions.dat", ios::in);
+    while(fq.read((char*)this, sizeof(question))){
+        if(strcmp(subject, chosen) == 0){
+            total++;
+        }
+    }
+    if(total == 0){
+        fq.close();
+        return false;
+    }
+    fq.clear();
+    fq.seekg(0);
+    while(fq.read((char*)this, sizeof(question))){
+        if(strcmp(subject, chosen) != 0){
+            continue;
+        }
+        n++;
+        system("cls");
+        cout << "Subject : " << chosen << "\n\n";
+        cout << "Question : "<<ques << "\n";
+        cout << "1. " << optionA << endl;
+        cout << "2. " << optionB << endl;
+        cout << "3. " << optionC << endl;
+        cout << "4. " << optionD << endl;
+        do{
+            cout << "\nYour answer (1-4) : ";
+            cin >> ans;
+        }while(ans < 1 || ans > 4);
+
+        if(ans == correctoption){
+            score++;
+        }
+    }
+    fq.close();
+    return true;
+}
 };
 
 class examresult{
@@ -299,6 +421,7 @@ private:
     int marksobtained;
     float percentage;
     char grade[3];
+    int resultid;
     
 public:
 void calculate(){
@@ -329,18 +452,31 @@ void input(){
     calculate();
 }
 
-int resultid = studentid + marksobtained;
+void autoresultid(){
+    resultid = (studentid % 1000) * 1000000 + marksobtained * 1000 + totalmarks;
+}
 
 void output(){
     system("cls");
-    cout << "\nResult ID : " << resultid;
+    cout << "Result: ";
+    cout << "\n\nResult ID : " << resultid;
     cout << "\nStudent ID : " << studentid;
     cout << "\nStudent Name : " << studentname;
-    cout << "\nExam Date : " << examdate;
     cout << "\nTotal Marks : " << totalmarks;
     cout << "\nMarks Obtained : " <<marksobtained;
     cout << "\nPercentage : " << percentage;
     cout << "\nGrade : " << grade << endl;
+}
+
+void saveresult(int sid, char* nm, int total, int obtained){
+    studentid = sid;
+    strcpy(studentname, nm);
+    totalmarks = total;
+    marksobtained = obtained;
+    calculate();
+    autoresultid();
+    output();
+    save();
 }
 
 void save(){
@@ -630,7 +766,6 @@ void facultylogin(){
     faculty f;
     int choice;
     f.input();
-    subjectlist();
     do {
         system("cls");
         displayfaculty();
@@ -641,6 +776,7 @@ void facultylogin(){
                 system("pause");
                 break;
             case 2:
+                subjectlist();
                 questionsadd();
                 system("pause");
                 break;
@@ -681,10 +817,22 @@ void studentlogin(){
         cin>>choice;
         switch (choice){
             case 1:
-                e.selectsub();
+            {
+            if(e.selectsub()){
                 e.rules();
-                system("pause");
-                break;
+                int score, total;
+                if(e.takeexam(score, total)){
+                    system("cls");
+                    cout << "Exam finished!\n";
+                    saveresult(s.getid(), s.getname(),score, total);
+                }
+                else{
+                    cout << "\nNo questions available for this subject yet.\n";
+                }
+            }
+            system("pause");
+            break;
+            }
             case 2:
                 resultmenustudent();
                 system("pause");
