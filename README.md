@@ -25,7 +25,6 @@ Developed using **Object-Oriented Programming**, **file handling**, and **C++**.
 - [How the Examination Works](#-how-the-examination-works)
 - [OOP Concepts Used](#-oop-concepts-used)
 - [File Handling](#-file-handling)
-- [Program Structure](#-program-structure)
 - [Limitations](#-limitations)
 - [Troubleshooting](#-troubleshooting)
 - [FAQ](#-faq)
@@ -180,9 +179,11 @@ The examination process follows these steps:
 
 The percentage is calculated using:
 
-\[
-\text{Percentage} = \frac{\text{Marks Obtained}}{\text{Total Marks}} \times 100
-\]
+<div align="center">
+
+**Percentage = (Marks Obtained / Total Marks) × 100**
+
+</div>
 
 The grade is assigned as follows:
 
