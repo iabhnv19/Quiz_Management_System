@@ -94,6 +94,8 @@ git clone https://github.com/iabhnv19/Quiz_Management_System.git
 
 ---
 
+[![Architecture diagram of iabhnv19/quiz_management_system](https://gitdiagram.com/iabhnv19/quiz_management_system/diagram.png)](https://gitdiagram.com/iabhnv19/quiz_management_system?utm_source=readme&utm_medium=picture)
+
 ## Usage
 
 After launching the program, the main menu provides two options:
