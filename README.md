@@ -93,8 +93,11 @@ git clone https://github.com/iabhnv19/Quiz_Management_System.git
 ```
 
 ---
+## FlowChart
 
-[![Architecture diagram of iabhnv19/quiz_management_system](https://gitdiagram.com/iabhnv19/quiz_management_system/diagram.png)](https://gitdiagram.com/iabhnv19/quiz_management_system?utm_source=readme&utm_medium=picture)
+<img width="4722" height="6311" alt="diagram" src="https://github.com/user-attachments/assets/12ec3dbb-3141-41a0-be32-1e845688dff2" />
+
+---
 
 ## Usage
 
