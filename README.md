@@ -16,24 +16,6 @@ Developed using **Object-Oriented Programming**, **file handling**, and **C++**.
 
 ---
 
-## Table of Contents
-
-- [Overview](#-overview)
-- [Features](#-features)
-- [Quick Start](#-quick-start)
-- [Usage](#-usage)
-- [How the Examination Works](#-how-the-examination-works)
-- [OOP Concepts Used](#-oop-concepts-used)
-- [File Handling](#-file-handling)
-- [Limitations](#-limitations)
-- [Troubleshooting](#-troubleshooting)
-- [FAQ](#-faq)
-- [Future Improvements](#-future-improvements)
-- [Contributors](#-contributors)
-- [License & Author](#-license--author)
-
----
-
 ## Overview
 
 The **Online Exam / Quiz Management System** is a menu-driven C++ project developed to demonstrate the practical use of Object-Oriented Programming and file handling.
